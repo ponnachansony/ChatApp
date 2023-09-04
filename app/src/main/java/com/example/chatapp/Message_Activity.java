@@ -1,5 +1,6 @@
 package com.example.chatapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -224,6 +225,7 @@ public class Message_Activity extends AppCompatActivity  {
 
 
     }
+    @SuppressLint("StaticFieldLeak")
     public void sendFCMNotification(final String userToken, final String message) {
         // Use AsyncTask for network operations
 
@@ -240,7 +242,7 @@ public class Message_Activity extends AppCompatActivity  {
                     jsonBody.put("to", userToken);
 
                     JSONObject notification = new JSONObject();
-                    notification.put("title", "ChatApp");
+                    notification.put("title", fuser.ge());
                     notification.put("body", message);
 
                     jsonBody.put("notification", notification);
