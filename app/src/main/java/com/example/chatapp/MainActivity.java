@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,24 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser()!=null){
+
+            Intent receivedIntent = getIntent();
+            Bundle bundle = receivedIntent.getExtras();
+
+            String senderId = null;
+            if(bundle != null && bundle.containsKey("sender_id")) {
+                senderId = bundle.getString("sender_id");
+                Log.d("Log: ", "onStart(senderid): " + senderId);
+            }
+            Log.d("Log: ", "onStart: " + senderId);
+            if(senderId != null) {
+                Intent intent=new Intent(this,Message_Activity.class);
+                intent.putExtra("uuid", senderId);
+                startActivity(intent);
+                finish();
+                return;
+            }
+
             Intent intent=new Intent(this,Home_chat_List.class);
             startActivity(intent);
             finish();

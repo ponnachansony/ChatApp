@@ -50,23 +50,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d("Log: ", "onMessageReceived: Received Successfully");
-        if (remoteMessage.getNotification() != null) {
-            Log.d("Log: ", "onMessageReceived: " + remoteMessage.getNotification().getTitle());
-            showNotification(
 
-                    remoteMessage.getNotification().getTitle(),
-                    remoteMessage.getNotification().getBody());
-        }
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
+        assert  notification != null;
+        String title = notification.getTitle();
+        String body = notification.getBody();
+        Log.d("Log: ", "onMessageReceived: " + remoteMessage.getData());
+        String senderId = remoteMessage.getData().get("sender_id");
+        showNotification(title, body, senderId);
     }
 
     // Method to display the notifications
 
     public void showNotification(String title,
-                                 String message) {
+                                 String message, String senderId) {
         // Pass the intent to switch to the MainActivity
-        Intent intent = new Intent(this, Home_chat_List.class);
+        Intent intent = new Intent(this, MainActivity.class);
         String channel_id = "notification_channel";
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("sender_id", senderId);
         PendingIntent pendingIntent
                 = PendingIntent.getActivity(
                 this, 0, intent,

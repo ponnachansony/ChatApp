@@ -46,33 +46,24 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 
-public class Message_Activity extends AppCompatActivity  {
+public class Message_Activity extends AppCompatActivity {
 
 
-    TextView chat_username,chat_online;
-
-
-
+    public static final String TAG = "Log: " + Message_Activity.class.getSimpleName();
+    private static final int FILE_PICKER_REQUEST_CODE = 123;
+    TextView chat_username, chat_online;
+    com.example.chatapp.Model.FirebaseUser receiverFirebaseUser;
     EditText chat_typing;
     ImageButton sendbtn;
-
     FirebaseUser fuser;
     DatabaseReference reference, referenceSender, referenceReceiver;
-    Intent intent;
-    String receiverId, senderRoom, receiverRoom;
-
-
+    String senderRoom;
+    String receiverRoom;
     String senderUUID, receiverUUID;
-
-    String recieverEmail, senderEmail;
-
     RecyclerView recycler;
     MessageAdapter messageAdapter;
     ImageButton docTagBtn;
-
-    private static final int FILE_PICKER_REQUEST_CODE = 123;
-    public static final String TAG = "Log: " + Message_Activity.class.getSimpleName();
-
+    private DatabaseReference receiverDatabaseReference;
 
     public static String extractFirstPart(String email) {
         int atIndex = email.indexOf('@');
@@ -86,145 +77,143 @@ public class Message_Activity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message);
-        try {
-
-            FirebaseApp.initializeApp(this); // Initialize Firebase
-
-            docTagBtn = findViewById(R.id.doc_tag_btn);
+        FirebaseApp.initializeApp(this); // Initialize Firebase
 
 
-            recycler = findViewById(R.id.chat_recycler);
-            receiverId = getIntent().getStringExtra("id");
-            recieverEmail = extractFirstPart(getIntent().getStringExtra("email"));
-            senderEmail = extractFirstPart(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-            senderUUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            receiverUUID = getIntent().getStringExtra("uuid");
-            receiverId = getIntent().getStringExtra("uuid");
+        senderUUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        receiverUUID = getIntent().getStringExtra("uuid");
 
-            Log.d(TAG, "onCreate: " + recieverEmail + "-" + senderEmail);
+        receiverDatabaseReference = FirebaseDatabase.getInstance().getReference("logged_in_user_cred").child(receiverUUID);
+        receiverDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                receiverFirebaseUser = com.example.chatapp.Model.FirebaseUser.fromDatabase(snapshot);
+                setContentView(R.layout.activity_message);
 
-            senderRoom = senderUUID +"-room-"+ receiverUUID;
-//            senderRoom = FirebaseAuth.getInstance().getUid() +"-room-"+ receiverId;
-//            receiverRoom = receiverId + "-room-" +  FirebaseAuth.getInstance().getUid();
-            receiverRoom = receiverUUID + "-room-" +  senderUUID;
+                doRemainingStuffs();
+            }
 
-            messageAdapter = new MessageAdapter(this);
-            recycler.setAdapter(messageAdapter);
-            recycler.setLayoutManager(new LinearLayoutManager(this));
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void doRemainingStuffs() {
+        docTagBtn = findViewById(R.id.doc_tag_btn);
+        recycler = findViewById(R.id.chat_recycler);
 
 
-            fuser = FirebaseAuth.getInstance().getCurrentUser();
-            referenceSender = FirebaseDatabase.getInstance().getReference("messages").child(senderRoom);
-            referenceReceiver = FirebaseDatabase.getInstance().getReference("messages").child(receiverRoom);
+        senderRoom = senderUUID + "-room-" + receiverUUID;
+        receiverRoom = receiverUUID + "-room-" + senderUUID;
+
+        messageAdapter = new MessageAdapter(this);
+        recycler.setAdapter(messageAdapter);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
 
 
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        referenceSender = FirebaseDatabase.getInstance().getReference("messages").child(senderRoom);
+        referenceReceiver = FirebaseDatabase.getInstance().getReference("messages").child(receiverRoom);
 
-            referenceSender.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    messageAdapter.clear(); // Clear existing messages before adding new ones
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        MessageModel messageModel = dataSnapshot.getValue(MessageModel.class);
-                        Log.d(TAG, "Sender Message: " + messageModel.getMessage());
-                        messageAdapter.add(messageModel);
-                        recycler.scrollToPosition(messageAdapter.getLastItemPosition());
-                    }
+
+        referenceSender.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messageAdapter.clear(); // Clear existing messages before adding new ones
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    MessageModel messageModel = dataSnapshot.getValue(MessageModel.class);
+                    Log.d(TAG, "Sender Message: " + messageModel.getMessage());
+                    messageAdapter.add(messageModel);
+                    recycler.scrollToPosition(messageAdapter.getLastItemPosition());
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Message_Activity", "Sender data retrieval cancelled: " + error.getMessage());
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Message_Activity", "Sender data retrieval cancelled: " + error.getMessage());
+            }
+        });
+
+        referenceReceiver.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messageAdapter.clear(); // Clear existing messages before adding new ones
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    MessageModel messageModel = dataSnapshot.getValue(MessageModel.class);
+                    Log.d(TAG, "Receiver Message: " + messageModel.getMessage());
+                    messageAdapter.add(messageModel);
                 }
-            });
+            }
 
-            referenceReceiver.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    messageAdapter.clear(); // Clear existing messages before adding new ones
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        MessageModel messageModel = dataSnapshot.getValue(MessageModel.class);
-                        Log.d(TAG, "Receiver Message: " + messageModel.getMessage());
-                        messageAdapter.add(messageModel);
-                    }
-                }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Message_Activity", "Receiver data retrieval cancelled: " + error.getMessage());
+            }
+        });
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Message_Activity", "Receiver data retrieval cancelled: " + error.getMessage());
-                }
-            });
-
-            docTagBtn.setOnClickListener(view -> {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*"); // this is for all file types
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
-                String fileContentType = "image/jpeg"; // Replace with the actual content type of the file
-                String fileContentUrl = "https://example.com/audio.mp3"; // Replace with the actual content URL of the file
+        docTagBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*"); // this is for all file types
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
+            String fileContentType = "image/jpeg"; // Replace with the actual content type of the file
+            String fileContentUrl = "https://example.com/audio.mp3"; // Replace with the actual content URL of the file
 //                sendFileMessage(fileContentType, fileContentUrl);
 
-            });
+        });
 
 
-            sendbtn = findViewById(R.id.send_btn);
-            sendbtn.setOnClickListener(view -> {
-                String message = chat_typing.getText().toString();
-                if (message.trim().length() > 0) {
-                    sendMessage(message);
-                    chat_typing.setText("");
-                }
-            });
+        sendbtn = findViewById(R.id.send_btn);
+        sendbtn.setOnClickListener(view -> {
+            String message = chat_typing.getText().toString();
+            if (message.trim().length() > 0) {
+                sendMessage(message);
+                chat_typing.setText("");
+            }
+        });
 
-            chat_typing = findViewById(R.id.chat_typing);
+        chat_typing = findViewById(R.id.chat_typing);
 
-            Toolbar toolbar = findViewById(R.id.chat_toolbar);
-            toolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.baseline_more_vert_24));
-            toolbar.setNavigationOnClickListener(v-> onBackPressed());
-            toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.baseline_arrow_back_24));
-
-
+        Toolbar toolbar = findViewById(R.id.chat_toolbar);
+        toolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.baseline_more_vert_24));
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.baseline_arrow_back_24));
 
 
-            chat_username = findViewById(R.id.username_item_name);
-            chat_online=findViewById(R.id.msg_online);
-            intent = getIntent();
-            String userName = intent.getStringExtra("userName");
-            TextView userNameView = findViewById(R.id.home_toolbarUsername);
-            userNameView.setText(userName);
+        chat_username = findViewById(R.id.username_item_name);
+        chat_online = findViewById(R.id.msg_online);
+        String userName = receiverFirebaseUser.getUsername();
+        TextView userNameView = findViewById(R.id.home_toolbarUsername);
+        userNameView.setText(userName);
 
-            fuser = FirebaseAuth.getInstance().getCurrentUser();
-            reference = FirebaseDatabase.getInstance().getReference("logged_in_user_cred").child(intent.getStringExtra("uuid")).child("is_online");
-            reference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Boolean isOnline = snapshot.getValue(Boolean.class);
-                    userNameView.setText(userName);
-                    if(isOnline != null) {
-                        chat_online.setText(isOnline ? "Online" : "Offline");
-                        messageAdapter.setReceiverOnline(isOnline);
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("logged_in_user_cred").child(receiverUUID).child("is_online");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Boolean isOnline = snapshot.getValue(Boolean.class);
+                userNameView.setText(userName);
+                if (isOnline != null) {
+                    chat_online.setText(isOnline ? "Online" : "Offline");
+                    messageAdapter.setReceiverOnline(isOnline);
 
 //                        Intent intent = new Intent(Message_Activity.this,Home_chat_List.class);
 //                        intent.putExtra("isOnlineStatus", isOnline);
 //                        startActivity(intent);
 
-                    }
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-
+            }
+        });
     }
+
     @SuppressLint("StaticFieldLeak")
     public void sendFCMNotification(final String userToken, final String message) {
         // Use AsyncTask for network operations
@@ -242,9 +231,14 @@ public class Message_Activity extends AppCompatActivity  {
                     jsonBody.put("to", userToken);
 
                     JSONObject notification = new JSONObject();
-                    notification.put("title", fuser.ge());
+//                    notification.put("title", fuser.getEmail());
+                    Log.d(TAG, "Sender's Name: " + "getDisplayName");
+                    notification.put("title", fuser.getDisplayName());
                     notification.put("body", message);
+                    JSONObject notificationData = new JSONObject();
+                    notificationData.put("sender_id", senderUUID);
 
+                    jsonBody.put("data", notificationData);
                     jsonBody.put("notification", notification);
 
                     // Create URL and HttpURLConnection
@@ -299,6 +293,7 @@ public class Message_Activity extends AppCompatActivity  {
         }.execute();
 
     }
+
     private void sendMessage(String message) {
         String messageId = UUID.randomUUID().toString();
         long timestamp = System.currentTimeMillis();
@@ -338,6 +333,7 @@ public class Message_Activity extends AppCompatActivity  {
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.chat_menu, menu);
@@ -350,6 +346,7 @@ public class Message_Activity extends AppCompatActivity  {
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 messageAdapter.getFilter().filter(newText); // Use messageAdapter here
@@ -415,8 +412,6 @@ public class Message_Activity extends AppCompatActivity  {
         }
         return "unknown_file";
     }
-
-
 
 
 }

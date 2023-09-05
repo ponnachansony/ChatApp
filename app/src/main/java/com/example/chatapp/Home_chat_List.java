@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -87,7 +88,14 @@ public class Home_chat_List extends AppCompatActivity {
 
         firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
         databaseReference= FirebaseDatabase.getInstance().getReference("logged_in_user_cred").child(firebaseUser.getUid());
-
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                String token = task.getResult();
+                Map<String, Object> tokenData = new HashMap<>();
+                tokenData.put("fcm_token", token);
+                databaseReference.updateChildren(tokenData);
+            }
+        });
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

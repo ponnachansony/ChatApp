@@ -66,13 +66,7 @@ FirebaseAuth firebaseAuth;
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
 //                    com.example.chatapp.Model.FirebaseUser inLoopUser = snapshot1.getValue(com.example.chatapp.Model.FirebaseUser.class);
 
-                    com.example.chatapp.Model.FirebaseUser newUser = new com.example.chatapp.Model.FirebaseUser();
-                    newUser.setId(snapshot1.child("id").getValue(String.class));
-                    newUser.setUsername(snapshot1.child("username").getValue(String.class));
-                    newUser.setMail(snapshot1.child("mail").getValue(String.class));
-                    newUser.setOnline(snapshot1.child("is_online").getValue(Boolean.class));
-                    newUser.setPassword(snapshot1.child("password").getValue(String.class));
-                    newUser.setUuid(snapshot1.child("uuid").getValue(String.class));
+                    com.example.chatapp.Model.FirebaseUser newUser = com.example.chatapp.Model.FirebaseUser.fromDatabase(snapshot1);
 
                     Log.d(TAG, "onDataChange: " + newUser);
 

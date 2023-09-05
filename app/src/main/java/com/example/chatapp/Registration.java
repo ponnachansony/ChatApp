@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -185,15 +187,32 @@ public class Registration extends AppCompatActivity {
                 return;
             } if (sign_password.getText().toString().equals(sign_re_username.getText().toString())) {
                 Toast.makeText(this, "password do not match", Toast.LENGTH_SHORT).show();
-                     return;
+                return;
             }else {
                 firebaseAuth.createUserWithEmailAndPassword(mail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseUser user = task.getResult().getUser();
                         if (task.isSuccessful()) {
-                            saveUserDataToDatabase(username,mail,password,id);
-                            Toast.makeText(Registration.this, "Registration successfull", Toast.LENGTH_SHORT).show();
-                            finish();
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                            assert  user != null;
+                            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()) {
+                                        saveUserDataToDatabase(username,mail,password,id);
+                                        Toast.makeText(Registration.this, "Registration Successfully", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                    else {
+                                        Toast.makeText(Registration.this, "Failed to update user profile", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+
+
                         } else {
                             Toast.makeText(Registration.this, "Registration/Authentication failed", Toast.LENGTH_SHORT).show();
                             Toast.makeText(Registration.this, "try again with valid credentials", Toast.LENGTH_SHORT).show();
@@ -281,7 +300,7 @@ class User{
 
 
 
-    class AlphanumericInputFilter implements InputFilter {
+class AlphanumericInputFilter implements InputFilter {
 
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
