@@ -230,16 +230,20 @@ public class Message_Activity extends AppCompatActivity {
                     JSONObject jsonBody = new JSONObject();
                     jsonBody.put("to", userToken);
 
-                    JSONObject notification = new JSONObject();
-//                    notification.put("title", fuser.getEmail());
-                    Log.d(TAG, "Sender's Name: " + "getDisplayName");
-                    notification.put("title", fuser.getDisplayName());
-                    notification.put("body", message);
+                     //Notification in grouping -9/11/2023
+
+                    //JSONObject notification = new JSONObject();
+////                    notification.put("title", fuser.getEmail());
+//                    Log.d(TAG, "Sender's Name: " + "getDisplayName");
+//                    notification.put("title", fuser.getDisplayName());
+//                    notification.put("body", message);
                     JSONObject notificationData = new JSONObject();
+                    notificationData.put("title", fuser.getDisplayName());
+                    notificationData.put("body", message);
                     notificationData.put("sender_id", senderUUID);
 
                     jsonBody.put("data", notificationData);
-                    jsonBody.put("notification", notification);
+//                    jsonBody.put("notification", notification);
 
                     // Create URL and HttpURLConnection
                     URL url = new URL("https://fcm.googleapis.com/fcm/send");

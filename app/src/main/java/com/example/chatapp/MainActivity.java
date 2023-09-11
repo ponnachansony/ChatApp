@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -57,7 +58,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Log: ", "onStart(senderid): " + senderId);
             }
             Log.d("Log: ", "onStart: " + senderId);
+
+               //Notification in grouping -9/11/2023
             if(senderId != null) {
+
+                SharedPreferences sharedPreferences = getSharedPreferences("notification_data", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(senderId, "");
+                editor.commit();
+
+
                 Intent intent=new Intent(this,Message_Activity.class);
                 intent.putExtra("uuid", senderId);
                 startActivity(intent);
