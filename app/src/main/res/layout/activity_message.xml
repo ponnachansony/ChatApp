@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@drawable/lightbackgroundchat"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -31,63 +31,69 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/chat_appbar"
-        android:layout_above="@+id/typer"
+        android:paddingBottom="52dp"
         android:background="@drawable/lightbackgroundchat"
         />
 
     <RelativeLayout
         android:id="@+id/typer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:padding="0dp">
+        android:layout_marginEnd="50dp"
+        android:padding="0dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:background="@drawable/chat_background"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        >
         <ImageButton
             android:id="@+id/emoji_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="6dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/new_emoji"
+            android:background="@drawable/new_emoji_chat"
             tools:ignore="ContentDescription"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="8dp"/>
 
         <EditText
             android:id="@+id/chat_typing"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/send_btn"
+            android:layout_height="match_parent"
             android:hint=" Type a message.."
             android:background="@color/white"
             android:layout_centerVertical="true"
             android:autofillHints=""
-            android:layout_alignParentRight="false"
-            android:layout_marginStart="45dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="40dp"
-            />
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="40dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="46dp"/>
         <ImageButton
             android:id="@+id/doc_tag_btn"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_alignParentRight="false"
-            android:background="@drawable/newtag"
-            android:layout_toLeftOf="@id/send_btn"
-            tools:ignore="ContentDescription"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="12dp"
-            />
-        <ImageButton
-            android:id="@+id/send_btn"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:background="@drawable/new_doc_tag"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/sendbtn"
-            android:layout_marginTop="3dp"
             tools:ignore="ContentDescription"
-            />
-
-
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="8dp"/>
     </RelativeLayout>
-    </RelativeLayout>
+    <ImageButton
+        android:id="@+id/send_btn"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/bg_ic_send"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/baseline_send_24"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="5dp"
+        tools:ignore="ContentDescription"
+        app:tint="@color/onPrimary" />
+</RelativeLayout>

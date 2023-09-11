@@ -1,156 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/background">
+
      <com.google.android.material.appbar.AppBarLayout
          android:id="@+id/prof_appbar"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content">
+         android:layout_height="wrap_content"
+         android:background="@color/primary"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent">
+
           <androidx.appcompat.widget.Toolbar
               android:id="@+id/prof_toolbar"
-              app:contentInsetStartWithNavigation="0dp"
               android:layout_width="match_parent"
-              android:layout_height="?attr/actionBarSize"
-              android:background="?attr/colorPrimary"
-              android:elevation="4dp"
-              app:title="My Profile"
-              app:titleTextColor="@color/white"
-              app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-              android:theme="@style/ToolbarTheme"
-              app:contentInsetStart="0dp">
-          </androidx.appcompat.widget.Toolbar>
+              android:layout_height="wrap_content"
+              app:subtitleTextColor="@color/onPrimaryMedium"
+              app:title="@string/screen_name_prof"
+              app:titleTextAppearance="@style/ChatApp.Widgets.LoginTitleTextAppearance"
+              app:titleTextColor="@color/onPrimary" />
+
      </com.google.android.material.appbar.AppBarLayout>
-<ScrollView
 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#EAECEB">
-<LinearLayout
-
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".UserProfile"
-    android:background="#EAECEB"
-    >
-
-
-<LinearLayout
-    android:layout_width="350dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/curve_background"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginTop="100dp"
-    android:padding="10dp"
-    android:layout_marginBottom="60dp"
-    >
-
-     <ImageView
-         android:id="@+id/profile_pic_settings"
-         android:layout_width="200dp"
-         android:layout_height="200dp"
-         android:layout_gravity="center_horizontal"
-         android:background="@drawable/circle_background"
-         android:layout_marginTop="10dp"
-         android:src="@drawable/round_prof" />
-     <TextView
-         android:id="@+id/dp_change_btn"
-         android:layout_width="wrap_content"
+     <androidx.cardview.widget.CardView
+         android:layout_width="0dp"
          android:layout_height="wrap_content"
-         android:text="click to change dp"
-         android:layout_gravity="center_horizontal"
-         android:textColor="#128C7E"
-         android:visibility="gone"/>
+         android:layout_margin="16dp"
+         app:cardBackgroundColor="@color/surface"
+         app:cardCornerRadius="@dimen/default_corner_radius"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@id/prof_appbar"
+         app:layout_constraintWidth_max="400dp">
 
-     <LinearLayout
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="50dp"
-         android:layout_gravity="center"
-         android:padding="10dp">
+          <ScrollView
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-     <TextView
-         android:id="@+id/profile_name_lable_settings"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_gravity="center_vertical"
-         android:text="Name:"
-         android:textSize="20sp"
-         />
-     <EditText
-         android:id="@+id/profile_name_settings"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_gravity="center_horizontal"
-         android:text="name"
-         android:background="#ffff"
-         android:textSize="20sp"
-         android:ellipsize="start"
-         android:maxLines="1"
-         android:maxLength="15"
-         android:layout_marginStart="10dp"
-         android:padding="10dp"
-         android:textStyle="bold"
-         android:drawableEnd="@drawable/edit"
-         android:drawablePadding="10dp"
-         />
+               <androidx.appcompat.widget.LinearLayoutCompat
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:orientation="vertical">
 
-     </LinearLayout>
-     <LinearLayout
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="0dp"
-         android:layout_gravity="center"
-         android:padding="10dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Update Profile"
+                        android:gravity="center_horizontal"
+                        android:fontFamily="@font/app_font_bold"
+                        android:textColor="@color/onSurface"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:padding="16dp" />
 
-          <TextView
-              android:id="@+id/profile_mobile_lable_settings"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical"
-              android:text="Mobile:"
-              android:textSize="20sp"
-              />
-          <EditText
-              android:id="@+id/profile_mobile_settings"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_horizontal"
-              android:text="mobile"
-              android:textSize="20sp"
-              android:inputType="number"
-              android:maxLength="10"
-              android:background="#ffff"
-              android:layout_marginStart="10dp"
-              android:padding="10dp"
-              android:textStyle="bold"
-              android:drawableEnd="@drawable/edit"
-              android:drawablePadding="10dp"
-              />
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:padding="10dp"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:src="@drawable/dp"
+                        android:layout_gravity="center_horizontal" />
 
-     </LinearLayout>
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_height="1dp"
+                        android:padding="10dp" />
 
-     <Button
-         android:foreground="?selectableItemBackgroundBorderless"
-         android:id="@+id/prof_update"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="update profile"
-         android:textStyle="bold"
-         android:background="@drawable/btn_background"
-         android:layout_gravity="center_horizontal"
-         android:padding="10dp"
-         android:paddingRight="10dp"
-         android:paddingLeft="10dp"
-         android:layout_marginTop="10dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/prof_name_layout"
+                        style="@style/ChatApp.Widgets.LoginInputField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:hint="Name"
+                        app:startIconDrawable="@drawable/profile"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/edit">
 
-         />
-</LinearLayout>
+                         <com.google.android.material.textfield.TextInputEditText
+                             android:id="@+id/prof_name_field"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:inputType="text" />
 
+                    </com.google.android.material.textfield.TextInputLayout>
 
-</LinearLayout>
-</ScrollView>
-</RelativeLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/prof_mail_layout"
+                        style="@style/ChatApp.Widgets.LoginInputField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:hint="Email"
+                        app:startIconDrawable="@drawable/ic_email"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/edit">
+
+                         <com.google.android.material.textfield.TextInputEditText
+                             android:id="@+id/prof_mail_field"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:inputType="text" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/prof_phone_layout"
+                        style="@style/ChatApp.Widgets.LoginInputField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:hint="Mobile"
+                        app:startIconDrawable="@drawable/phone"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/edit">
+
+                         <com.google.android.material.textfield.TextInputEditText
+                             android:id="@+id/prof_phone_field"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:inputType="number"
+                             android:maxLength="10" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/prof_btn_update"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="32dp"
+                        android:fontFamily="@font/app_font_bold"
+                        android:minHeight="58dp"
+                        android:text="Update"
+                        android:textAllCaps="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:dividerColor="@color/onSurfaceStroke" />
+
+               </androidx.appcompat.widget.LinearLayoutCompat>
+
+          </ScrollView>
+
+     </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,4 +4,27 @@
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
     </style>
 
+    <style name="ChatApp.Widgets.LoginInputField" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">@color/onSurfaceEditTextBackground</item>
+        <item name="hintTextColor">@color/onSurfaceEditTextHintColor</item>
+        <item name="android:textColor">@color/onSurfaceEditTextTextColor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="boxStrokeColor">@color/onSurfaceStroke</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+    </style>
+
+    <style name="ChatApp.Widgets.LoginTitleTextAppearance" parent="Widget.AppCompat.TextView">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/app_font_bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+
+    <color name="onSurfaceEditTextBackground">#f1f1f1</color>
+    <color name="onSurfaceEditTextHintColor">#333333</color>
+    <color name="onSurfaceEditTextTextColor">#333333</color>
 </resources>

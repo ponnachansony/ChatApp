@@ -1,92 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#EAECEB">
-    <!--    <ImageView-->
-    <!--        android:layout_width="250dp"-->
-    <!--        android:layout_height="250dp"-->
-    <!--        android:background="@drawable/loginpic"-->
-    <!--        android:layout_gravity="center" />-->
+    android:background="@color/background">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/login_appbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_gravity="center"
-        android:background="@color/white"
-        android:layout_marginTop="100dp">
-        <ImageView
-            android:layout_width="400dp"
-            android:layout_height="300dp"
-            android:background="@drawable/loginpic"/>
+        android:background="@color/primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/login_editTextEmail"
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:layout_marginTop="120dp"
-            />
+            app:subtitle="Where Conversations Begin"
+            app:subtitleTextColor="@color/onPrimaryMedium"
+            app:title="@string/app_name"
+            app:titleTextAppearance="@style/ChatApp.Widgets.LoginTitleTextAppearance"
+            app:titleTextColor="@color/onPrimary" />
 
-        <RelativeLayout
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="@dimen/default_corner_radius"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_appbar"
+        app:layout_constraintWidth_max="400dp">
+
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/login_editTextPassword"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:maxLength="15"
-                android:layout_toStartOf="@+id/showPasswordCheckBox"
-                android:inputType="textPassword"
-                />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/showPasswordCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/app_font_bold"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:text="Login"
+                    android:textColor="@color/onSurface"
+                    android:textSize="26sp" />
 
-        </RelativeLayout>
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_height="1dp" />
 
-        <Button
-            android:id="@+id/button_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="login"
-            android:padding="20dp"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Don't have an account?"
-                android:textSize="15sp"/>
-            <TextView
-                android:id="@+id/btn_goto_signin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SignUp"
-                android:textSize="20sp"
-                android:layout_marginStart="6dp"
-                android:textColor="#218C27"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/login_email_layout"
+                    style="@style/ChatApp.Widgets.LoginInputField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:hint="Email"
+                    app:startIconDrawable="@drawable/ic_email">
 
-        </LinearLayout>
-    </LinearLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/login_email_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-</LinearLayout>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/login_password_layout"
+                    style="@style/ChatApp.Widgets.LoginInputField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:hint="Password"
+                    app:passwordToggleEnabled="true"
+                    app:startIconDrawable="@drawable/ic_password">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/login_password_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/login_btn_submit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="32dp"
+                    android:fontFamily="@font/app_font_bold"
+                    android:minHeight="58dp"
+                    android:text="Login"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:dividerColor="@color/onSurfaceStroke" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/login_signup_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:text="Don't have an account? Sign up"
+                    android:textColor="@color/onSurface" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </ScrollView>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

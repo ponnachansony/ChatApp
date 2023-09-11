@@ -7,4 +7,36 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primary">#FF018786</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="onPrimaryMedium">#CCFFFFFF</color>
+    <color name="onPrimaryLight">#99FFFFFF</color>
+
+    <color name="primaryDark">#006867</color>
+    <color name="onPrimaryDark">#FFFFFF</color>
+    <color name="onPrimaryDarkMedium">#CCFFFFFF</color>
+    <color name="onPrimaryDarkLight">#99FFFFFF</color>
+
+    <color name="background">#F3F2F3</color>
+    <color name="onBackground">#E6000000</color>
+    <color name="onBackgroundMedium">#B3000000</color>
+    <color name="onBackgroundLight">#80000000</color>
+    <color name="onBackgroundStroke">#e1e1e1</color>
+
+    <color name="strokeBetweenBackgroundAndSurface">#e1e1e1</color>
+
+
+    <color name="surface">#FFFFFF</color>
+    <color name="onSurface">#E6000000</color>
+    <color name="onSurfaceMedium">#B3000000</color>
+    <color name="onSurfaceLight">#80000000</color>
+    <color name="onSurfaceStroke">#f1f1f1</color>
+    <color name="surfaceContainer">#f1f1f1</color>
+
+
+    <color name="online_color">#00FF00</color>
+
+
+
 </resources>

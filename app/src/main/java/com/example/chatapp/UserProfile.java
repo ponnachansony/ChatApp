@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.chatapp.databinding.ActivityUserProfileBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,78 +39,41 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfile extends AppCompatActivity {
 
+    ActivityUserProfileBinding binding;
     ImageView prof_image;
-    EditText prof_name, prof_mail,prof_mobile;
+    EditText prof_name, prof_mail, prof_mobile;
     TextView add_img;
     DatabaseReference reference;
     FirebaseUser fUser;
     Button update_prof;
     Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
-        prof_image = findViewById(R.id.profile_pic_settings);
-        prof_name = findViewById(R.id.profile_name_settings);
-
-        prof_mobile=findViewById(R.id.profile_mobile_settings);
-
-        add_img=findViewById(R.id.dp_change_btn);
+        binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.profNameField.setFilters(new InputFilter[]{new AlphanumericInputFilter2()});
 
 
+        validation();
 
-        prof_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (prof_name.length() >= 15|| prof_name.length()<1) {
-                    prof_name.setError("enter the name within 1-15 ");
-                } else if (prof_name.length() <= 14) {
-                    prof_name.setError(null);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-        prof_mobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (prof_mobile.length() > 10||prof_mobile.length()<10) {
-                    prof_mobile.setError("enter the valid mobile no. ");
-                } else if (prof_mobile.length() == 10) {
-                    prof_mobile.setError(null);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-
-        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.prof_toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.baseline_arrow_back_24));
+        initeditnamemobile();
 
 
+    }
+
+    private void initeditnamemobile() {
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("logged_in_user_cred").child(fUser.getUid());
-        toolbar.setNavigationOnClickListener(v-> onBackPressed());
+        binding.profToolbar.setNavigationOnClickListener(v -> onBackPressed());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 com.example.chatapp.Model.FirebaseUser user = snapshot.getValue(com.example.chatapp.Model.FirebaseUser.class);
-                prof_name.setText(user.getUsername());
-                prof_mobile.setText(user.getId());
-
-
+                binding.profNameField.setText(user.getUsername());
+                binding.profMailField.setText(user.getMail());
+                binding.profPhoneField.setText(user.getId());
             }
 
             @Override
@@ -114,29 +81,72 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
-        Button updateProfileBtn = findViewById(R.id.prof_update);
-        updateProfileBtn.setOnClickListener(new View.OnClickListener() {
+        binding.profBtnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String newName = prof_name.getText().toString();
-                String newMobile= prof_mobile.getText().toString();
-                updateProfileData(newName,newMobile);
+                String newName = binding.profNameField.getText().toString();
+                String newMail = binding.profMailField.getText().toString();
+                String newMobile = binding.profPhoneField.getText().toString();
+
+                updateProfileData(newName, newMail, newMobile);
             }
         });
 
-        add_img.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(intent, 1);
+//        add_img.setOnClickListener(view -> {
+//            Intent intent = new Intent(Intent.ACTION_PICK);
+//            intent.setType("image/*");
+//            startActivityForResult(intent, 1);
+//
 
+    }
 
+    private void validation() {
+        setSupportActionBar(binding.profToolbar);
+        binding.profToolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.baseline_arrow_back_24));
+
+        binding.profNameField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (binding.profNameField.length() >= 15 || binding.profNameField.length() < 1) {
+                    binding.profNameLayout.setError("enter the name within 1-15 ");
+                } else if (binding.profNameField.length() <= 14) {
+                    binding.profNameLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+        binding.profPhoneField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (binding.profPhoneField.length() > 10 || binding.profPhoneField.length() < 10) {
+                    binding.profPhoneLayout.setError("enter the valid mobile no. ");
+                } else if (binding.profPhoneField.length() == 10) {
+                    binding.profPhoneLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
         });
     }
 
-    private void updateProfileData(String newName,String newMobile) {
+    private void updateProfileData(String newName, String newMail, String newMobile) {
         HashMap<String, Object> updates = new HashMap<>();
         updates.put("username", newName);
-        updates.put("id",newMobile);
+        updates.put("mail", newMail);
+        updates.put("id", newMobile);
 
         reference.updateChildren(updates)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -152,7 +162,10 @@ public class UserProfile extends AppCompatActivity {
                         Toast.makeText(UserProfile.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -181,6 +194,7 @@ public class UserProfile extends AppCompatActivity {
 
         }
     }
+
     private void updateProfileImage(String imageUrl) {
         HashMap<String, Object> updates = new HashMap<>();
         updates.put("profileImage", imageUrl); // Update the image URL field in your FirebaseUser model
@@ -196,4 +210,33 @@ public class UserProfile extends AppCompatActivity {
 
 
 
+}
+class AlphanumericInputFilter2 implements InputFilter {
+
+    @Override
+    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+        // Define the allowed characters (alphanumeric and space)
+        String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ";
+
+        // Create a StringBuilder to hold the filtered text
+        StringBuilder filteredText = new StringBuilder();
+
+        // Loop through each character in the source text
+        for (int i = start; i < end; i++) {
+            char currentChar = source.charAt(i);
+
+            // Check if the character is in the list of allowed characters
+            if (allowedChars.indexOf(currentChar) != -1) {
+                filteredText.append(currentChar);
+            }
+        }
+
+        // If the filtered text is different from the source, return the filtered text
+        if (!TextUtils.equals(source, filteredText.toString())) {
+            return filteredText.toString();
+        }
+
+        // If no changes were made, return null to indicate that no filtering is necessary
+        return null;
+    }
 }

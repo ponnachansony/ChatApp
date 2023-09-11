@@ -18,24 +18,16 @@
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
             app:title="  ChatSpace"
+            app:titleTextAppearance="@style/ChatApp.Widgets.LoginTitleTextAppearance"
             app:titleTextColor="@color/white"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:theme="@style/ToolbarTheme"
             app:contentInsetStart="0dp">
-    </androidx.appcompat.widget.Toolbar>
-</com.google.android.material.appbar.AppBarLayout>
-<!--    <com.google.android.material.tabs.TabLayout-->
-<!--        android:id="@+id/tabLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="20dp"-->
-<!--        android:background="?attr/colorPrimary"-->
-<!--        app:tabMode="fixed"-->
-<!--        app:tabGravity="fill"-->
-<!--        app:tabTextColor="@android:color/white"-->
-<!--        android:layout_below="@+id/appbar"/>-->
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/page_viewer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-<!--        android:layout_below="@+id/tabLayout" />-->
 </RelativeLayout>

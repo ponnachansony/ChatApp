@@ -4,29 +4,44 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chatapp.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.HashMap;
+import java.util.Map;
 
-    Button login_btn;
-    EditText mail_edittext,password_edittext;
-    TextView goto_signup;
+public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+   FirebaseUser firebaseUser;
+
+    ActivityMainBinding binding;
     @Override
     protected void onStart() {
         super.onStart();
@@ -60,29 +75,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding=ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        login_btn=findViewById(R.id.button_login);
-        mail_edittext=findViewById(R.id.login_editTextEmail);
-        password_edittext=findViewById(R.id.login_editTextPassword);
-        goto_signup=findViewById(R.id.btn_goto_signin);
-
-
-        goto_signup.setOnClickListener(view -> {
-            Intent intent=new Intent(this,Registration.class);
-            startActivity(intent);
-        });
-
-        password_edittext.addTextChangedListener(new TextWatcher() {
+        initSignUPButton();
+        binding.loginPasswordField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String password = password_edittext.getText().toString();
+                String password =  binding.loginPasswordField.getText().toString();
                 if (password.length() >= 15 || password.length() < 6) {
-                    password_edittext.setError("Enter a password within 6-15 characters");
+                    binding.loginPasswordLayout.setError("Enter a password within 6-15 characters");
                 } else if (password.length() <= 14) {
                     boolean hasNumber = false;
                     boolean hasSpecialChar = false;
@@ -94,28 +100,28 @@ public class MainActivity extends AppCompatActivity {
                             hasSpecialChar = true;
                         }
                         if (hasNumber && hasSpecialChar) {
-                            password_edittext.setError(null);
+                            binding.loginPasswordLayout.setError(null);
                             return;
                         }
                     }
-                    password_edittext.setError("Password must contain at least one number and one special character");
+                    binding.loginPasswordLayout.setError("Password must contain at least one number and one special character");
                 }
             }
             @Override
             public void afterTextChanged(Editable editable) {
             }
         });
-        mail_edittext.addTextChangedListener(new TextWatcher() {
+        binding.loginEmailField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!Patterns.EMAIL_ADDRESS.matcher(mail_edittext.getText().toString()).matches()) {
-                    mail_edittext.setError("please enter valid mail");
-                } else if (Patterns.EMAIL_ADDRESS.matcher(mail_edittext.getText().toString()).matches()) {
-                    mail_edittext.setError(null);
+                if (!Patterns.EMAIL_ADDRESS.matcher( binding.loginEmailField.getText().toString()).matches()) {
+                    binding.loginEmailLayout.setError("Please enter valid mail");
+                } else if (Patterns.EMAIL_ADDRESS.matcher( binding.loginEmailField.getText().toString()).matches()) {
+                    binding.loginEmailLayout.setError(null);
                 }
             }
             @Override
@@ -123,15 +129,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-        login_btn.setOnClickListener(view -> {
+        binding.loginBtnSubmit.setOnClickListener(view -> {
             String mail,password;
-            mail=String.valueOf(mail_edittext.getText());
-            password=String.valueOf(password_edittext.getText());
+            mail=String.valueOf(binding.loginEmailField.getText());
+            password=String.valueOf(binding.loginPasswordField.getText());
 
             if (TextUtils.isEmpty(mail)||TextUtils.isEmpty(password)){
-                Toast.makeText(this, "please fill both fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
                 return;
             }
             firebaseAuth.signInWithEmailAndPassword(mail,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -144,14 +148,54 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }
                     else {
-                        Toast.makeText(MainActivity.this, "invalid password/mail", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(MainActivity.this, "check your password and mail-id again and try", Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(MainActivity.this, "Invalid password/mail,check your password and mail-id again and try", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         });
 
+    }
+    private void initSignUPButton() {
+        SpannableString spannableString = new SpannableString(binding.loginSignupText.getText());
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Intent intent = new Intent(MainActivity.this, Registration.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+
+        int startIndex = spannableString.toString().indexOf("Sign up");
+        int endIndex = startIndex + "Sign up".length();
+        spannableString.setSpan(clickableSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.primary)), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new UnderlineSpan(), startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        binding.loginSignupText.setText(spannableString);
+        binding.loginSignupText.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+    private void onlinestatus() {
+        if(firebaseUser != null) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("logged_in_user_cred").child(firebaseUser.getUid());
+            Map<String, Object> data = new HashMap<>();
+            data.put("is_online", true);
+            databaseReference.updateChildren(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (!task.isSuccessful()) {
+                        Log.e("Log: ", "onComplete: ", task.getException());
+//                        Toast.makeText(MyApp.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
 

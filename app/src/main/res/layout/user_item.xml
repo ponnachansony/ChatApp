@@ -8,20 +8,23 @@
     android:layout_marginTop="0.02dp">
     <ImageView
         android:id="@+id/user_profileImageview_recyc"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:background="@drawable/dp"/>
-<TextView
-    android:id="@+id/username_item_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="john"
-    android:textStyle="bold"
-    android:layout_toRightOf="@+id/user_profileImageview_recyc"
-    android:layout_marginStart="20dp"
-    android:textSize="20sp"
-    android:layout_marginTop="4dp"
-    />
+    <TextView
+        android:id="@+id/username_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="john"
+        android:textColor="@color/onSurface"
+        android:textStyle="normal"
+        android:fontFamily="sans-serif-medium"
+        android:layout_toRightOf="@+id/user_profileImageview_recyc"
+        android:layout_marginStart="15dp"
+        android:textSize="17sp"
+        android:layout_marginTop="2dp"
+        />
+
     <TextView
         android:id="@+id/item_mobile_no"
         android:layout_width="wrap_content"
@@ -29,8 +32,8 @@
         android:text="mobile"
         android:textStyle="normal"
         android:layout_toRightOf="@+id/user_profileImageview_recyc"
-        android:layout_marginStart="20dp"
-        android:textSize="15sp"
+        android:layout_marginStart="15dp"
+        android:textSize="12sp"
         android:layout_marginTop="30dp"
         />
 

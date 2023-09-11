@@ -61,11 +61,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FirebaseUser user = filteredUsers.get(position);
 
-//        if (user.getMail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
-//            // Skip binding for the current user
-//            return;
-//        }
-
         holder.usernamelist.setText(user.getUsername());
         holder.mobilelist.setText(user.getId());
 
@@ -81,10 +76,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         Log.d("Log: InAdapter", "onBindViewHolder: " + user.toString());
         holder.statuslist.setText( (user.getOnline() != null && user.getOnline())  ? "Online" : "Offline" );
-
-
-
-
     }
 
     @Override
@@ -112,7 +103,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         public TextView usernamelist,mobilelist,statuslist;
         public ImageView profile_image;
 
-        DatabaseReference reference;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -120,14 +110,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             mobilelist=itemView.findViewById(R.id.item_mobile_no);
             statuslist=itemView.findViewById(R.id.item_status);
             profile_image = itemView.findViewById(com.example.chatapp.R.id.user_profileImageview_recyc);
-
-//            boolean isOnlineStatus = false;
-//            if (getIntent() != null) {
-//                isOnlineStatus = getIntent().getBooleanExtra("isOnlineStatus", false);
-//            }
-//
-//            statuslist.setText(isOnlineStatus ? "Online" : "Offline");
-
 }
 
         private Intent getIntent() {
